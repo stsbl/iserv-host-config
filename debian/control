@@ -1,0 +1,19 @@
+Source: stsbl-iserv-host-config
+Section: misc
+Priority: optional
+Maintainer: Stadtteilschule Blankenese <repository@stsbl.de>
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-sequence-iserv,
+ dh-sequence-stsbl,
+Standards-Version: 4.4.1
+
+Package: stsbl-iserv-host-config
+Architecture: all
+Depends: ${misc:Depends},
+  ${perl:Depends},
+  iserv-portal,
+Description: Geräte-Konfiguration für IServ (EXPERIMENTELL)
+ Erlaubt das Erstllen von beliebigen Konfigurationsvariablen, die mit Geräten
+ in der Geräteverwaltung verküpft werden.
+Tag: suite::iserv, suite::iserv:portal, role::plugin, status::highlighted, status::experimental
