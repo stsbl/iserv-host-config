@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+        public: false
+
+    Stsbl\HostConfigBundle\:
+        resource: '../../'
+        exclude: '../../{Entity,Resources,Tests}'
