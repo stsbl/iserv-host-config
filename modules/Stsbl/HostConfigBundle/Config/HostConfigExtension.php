@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Stsbl\HostConfigBundle\Config;
 
+use IServ\CrudBundle\Mapper\FormMapper;
+use IServ\CrudBundle\Mapper\ShowMapper;
 use IServ\HostBundle\Model\Host;
 use IServ\HostBundle\Model\HostCollection;
 use IServ\HostExtensionBundle\Crud\AbstractHostExtension;
 use IServ\HostExtensionBundle\Crud\HostAdminExtensionInterface;
+use Stsbl\HostConfigBundle\Config\Mapper\FieldMapperEntryFactory;
 use Stsbl\HostConfigBundle\Entity\Config\HostConfig;
+use Stsbl\HostConfigBundle\FieldDefinition\FieldDefinition;
+use Stsbl\HostConfigBundle\FieldDefinition\FieldDefinitionProvider;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /*
  * The MIT License
@@ -40,16 +46,31 @@ use Stsbl\HostConfigBundle\Entity\Config\HostConfig;
  */
 final class HostConfigExtension extends AbstractHostExtension implements HostAdminExtensionInterface
 {
-    private const NAME = 'host-config';
+    public const NAME = 'host-config';
+
+    /**
+     * @var FieldDefinitionProvider
+     */
+    private $definitionProvider;
 
     /**
      * @var HostConfigRepositoryInterface
      */
     private $configRepository;
 
-    public function __construct(HostConfigRepositoryInterface $configRepository)
-    {
+    /**
+     * @var FieldMapperEntryFactory
+     */
+    private $fieldMapperEntryFactory;
+
+    public function __construct(
+        FieldDefinitionProvider $definitionProvider,
+        HostConfigRepositoryInterface $configRepository,
+        FieldMapperEntryFactory $fieldMapperEntryFactory
+    ) {
+        $this->definitionProvider = $definitionProvider;
         $this->configRepository = $configRepository;
+        $this->fieldMapperEntryFactory = $fieldMapperEntryFactory;
     }
 
     /**
@@ -58,6 +79,28 @@ final class HostConfigExtension extends AbstractHostExtension implements HostAdm
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureFormFields(FormMapper $formMapper): void
+    {
+        foreach ($this->definitionProvider->provide()->all() as $fieldDefinition) {
+            $field = $this->fieldMapperEntryFactory->createFormMapperEntry($fieldDefinition);
+            $formMapper->add($field->getName(), $field->getType(), $field->getOptions());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureShowFields(ShowMapper $showMapper): void
+    {
+        foreach ($this->definitionProvider->provide()->all() as $fieldDefinition) {
+            $field = $this->fieldMapperEntryFactory->createShowMapperEntry($fieldDefinition);
+            $showMapper->add($field->getName(), $field->getType(), $field->getOptions());
+        }
     }
 
     /**
