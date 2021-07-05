@@ -8,6 +8,6 @@ services:
         resource: '../../'
         exclude: '../../{Entity,Resources,Tests}'
 
-    Stsbl\HostConfigBundle\FieldDefinition\FieldDefinitionLoader:
+    Stsbl\HostConfigBundle\FieldDefinition\FieldConfigurationLoader:
         bind:
             $directories: ['/usr/share/iserv/shared/host-config/fields', '/etc/iserv/host-config/fields']
