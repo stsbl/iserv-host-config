@@ -44,23 +44,23 @@ final class FieldConfigurationParser
     private $configuration;
 
     /**
-     * @var Processor
-     */
-    private $processor;
-
-    /**
      * @var FieldDefinitionBuilder
      */
     private $builder;
 
+    /**
+     * @var Processor
+     */
+    private $processor;
+
     public function __construct(
         FieldDefinitionConfiguration $configuration,
-        Processor $processor,
-        FieldDefinitionBuilder $builder
+        FieldDefinitionBuilder $builder,
+        ?Processor $processor = null
     ) {
         $this->configuration = $configuration;
-        $this->processor = $processor;
         $this->builder = $builder;
+        $this->processor = $processor ?? new Processor();
     }
 
     /**
