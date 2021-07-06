@@ -43,6 +43,7 @@ class HostConfig
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Id()
      *
      * @var int|null
      */
@@ -64,7 +65,7 @@ class HostConfig
     private $key;
 
     /**
-     * @ORM\Column(name="vale", type="text", nullable=true)
+     * @ORM\Column(name="value", type="text", nullable=true)
      *
      * @var string|null
      */

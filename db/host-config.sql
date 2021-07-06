@@ -7,3 +7,5 @@ CREATE TABLE host_config (
     value       TEXT,
     UNIQUE (host_id, key)
 );
+
+GRANT SELECT, UPDATE, INSERT, DELETE ON "host_config" TO "symfony";
