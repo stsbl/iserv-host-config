@@ -1,2 +1,3 @@
 etc/iserv/host-config/fields
-usr/share/iserv/share/host-config/fields
+usr/share/iserv/shared/host-config/fields
+
