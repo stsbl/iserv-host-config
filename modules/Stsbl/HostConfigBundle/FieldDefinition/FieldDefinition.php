@@ -35,27 +35,15 @@ namespace Stsbl\HostConfigBundle\FieldDefinition;
 final class FieldDefinition
 {
     public const TYPE_TEXT = 'text';
+    public const TYPE_PASSWORD = 'password';
 
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    public function __construct(string $name, string $type, string $description)
-    {
-        $this->name = $name;
-        $this->type = $type;
-        $this->description = $description;
+    public function __construct(
+        private string $name,
+        private string $type,
+        private string $description,
+        private ?string $helpText,
+        private ?string $group,
+    ) {
     }
 
     /**
@@ -80,5 +68,15 @@ final class FieldDefinition
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function getHelpText(): ?string
+    {
+        return $this->helpText;
+    }
+
+    public function getGroup(): ?string
+    {
+        return $this->group;
     }
 }

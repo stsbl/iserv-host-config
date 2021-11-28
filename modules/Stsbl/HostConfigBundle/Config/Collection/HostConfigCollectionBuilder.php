@@ -39,7 +39,7 @@ final class HostConfigCollectionBuilder
     /**
      * @var array<string,HostConfig[]>
      */
-    private $hostConfigs = [];
+    private array $hostConfigs = [];
 
     /**
      * @return $this
@@ -48,7 +48,7 @@ final class HostConfigCollectionBuilder
     {
         $identifier = $hostConfig->getHost()->getIdentifier();
 
-        $this->hostConfigs[$identifier][] = $hostConfig;
+        $this->hostConfigs[$identifier][$hostConfig->getKey()] = $hostConfig;
 
         return $this;
     }

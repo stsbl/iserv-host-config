@@ -39,41 +39,28 @@ use Symfony\Component\Config\Definition\Processor;
 final class FieldConfigurationParser
 {
     /**
-     * @var FieldDefinitionConfiguration
-     */
-    private $configuration;
-
-    /**
-     * @var FieldDefinitionBuilder
-     */
-    private $builder;
-
-    /**
      * @var Processor
      */
-    private $processor;
+    private Processor $processor;
 
     public function __construct(
-        FieldDefinitionConfiguration $configuration,
-        FieldDefinitionBuilder $builder,
-        ?Processor $processor = null
+        private FieldDefinitionConfiguration $configuration,
+        private FieldDefinitionBuilder $builder,
+        ?Processor $processor = null,
     ) {
-        $this->configuration = $configuration;
-        $this->builder = $builder;
         $this->processor = $processor ?? new Processor();
     }
 
     /**
-     * @param mixed $config
-     * @return array<string,array<string,string>>
+     * @return array<string,array<string,array<string,string>>>
      */
-    private function processConfigurationContent($config): array
+    private function processConfigurationContent(mixed $config): array
     {
         return $this->processor->processConfiguration($this->configuration, [$config]);
     }
 
     /**
-     * @return list<array<string,array<string,string>>>
+     * @return list<array<string,array<string,array<string,string>>>>
      */
     private function tryLoadConfiguration(FieldConfigurationLoader $loader): array
     {
@@ -108,7 +95,7 @@ final class FieldConfigurationParser
                 $processed[] = $this->processConfigurationContent($content['host_config']);
             }
         } catch (LoadException $e) {
-        } catch (\Throwable $e) {
+            throw new \RuntimeException('Could not load configuration.', 0, $e);
         }
 
         return $processed;
@@ -119,7 +106,7 @@ final class FieldConfigurationParser
         $collectionBuilder = new FieldDefinitionCollectionBuilder();
 
         foreach ($this->tryLoadConfiguration($loader) as $config) {
-            foreach ($config as $name => $item) {
+            foreach ($config['fields'] ?? [] as $name => $item) {
                 $collectionBuilder->add($this->builder->build($name, $item));
             }
         }

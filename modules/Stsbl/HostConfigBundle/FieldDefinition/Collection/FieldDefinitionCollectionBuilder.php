@@ -39,7 +39,7 @@ final class FieldDefinitionCollectionBuilder
     /**
      * @var array<string,FieldDefinition>
      */
-    private $fieldDefinitions = [];
+    private array $fieldDefinitions = [];
 
     /**
      * @return $this

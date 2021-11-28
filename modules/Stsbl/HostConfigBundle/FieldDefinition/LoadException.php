@@ -34,12 +34,12 @@ namespace Stsbl\HostConfigBundle\FieldDefinition;
  */
 final class LoadException extends \Exception
 {
-    public static function couldNotRead(string $yamlFile, string $errorDescription): self
+    public static function couldNotRead(string $yamlFile, string $errorDescription, ?\Throwable $previous = null): self
     {
-        return new self(\sprintf('Could not read YAML file "%s": %s', $yamlFile, $errorDescription));
+        return new self(\sprintf('Could not read YAML file "%s": %s', $yamlFile, $errorDescription), 0, $previous);
     }
 
-    public static function couldNotParse(string $yamlFile, \Throwable $previous = null)
+    public static function couldNotParse(string $yamlFile, \Throwable $previous = null): self
     {
         return new self(\sprintf('Could not parse YAML file "%s".', $yamlFile), 0, $previous);
     }

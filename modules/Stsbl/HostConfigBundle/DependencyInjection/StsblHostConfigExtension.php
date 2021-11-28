@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Stsbl\HostConfigBundle\DependencyInjection;
 
 use IServ\CoreBundle\DependencyInjection\IServBaseExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /*
  * The MIT License
@@ -36,4 +37,25 @@ use IServ\CoreBundle\DependencyInjection\IServBaseExtension;
  */
 final class StsblHostConfigExtension extends IServBaseExtension
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function prepend(ContainerBuilder $container): void
+    {
+        parent::prepend($container);
+
+        $container->prependExtensionConfig('doctrine', [
+            'orm' => [
+                'entity_managers' => [
+                    'default' => [
+                        'mappings' => [
+                            'StsblHostConfigBundle' => [
+                                'type' => 'attribute',
+                            ]
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }

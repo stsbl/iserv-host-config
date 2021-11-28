@@ -8,6 +8,7 @@ use IServ\CoreBundle\Logger\ModuleLogger;
 use Psr\Log\LoggerInterface;
 use Stsbl\HostConfigBundle\Config\HostConfigExtension;
 use Stsbl\HostConfigBundle\FieldDefinition\FieldDefinition;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /*
@@ -43,10 +44,7 @@ final class FieldMapperEntryFactory
     private const FALLBACK_FORM_TYPE = TextType::class;
     private const FALLBACK_SHOW_TYPE = null;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -55,9 +53,19 @@ final class FieldMapperEntryFactory
 
     public function createFormMapperEntry(FieldDefinition $fieldDefinition): MapperEntry
     {
+        $name = $fieldDefinition->getName();
+        $options = [
+            'label' => _p('host-config-description', $fieldDefinition->getDescription()),
+            'property_path' => self::buildExtensionPropertyPath($name),
+            'required' => false,
+        ];
+
         switch ($fieldType = $fieldDefinition->getType()) {
             case FieldDefinition::TYPE_TEXT:
                 $type = TextType::class;
+                break;
+            case FieldDefinition::TYPE_PASSWORD:
+                $type = PasswordType::class;
                 break;
             default:
                 $this->logger->warning('Unknown field type "{type}". Using Symfony form type "{fallback_type}".', [
@@ -67,23 +75,32 @@ final class FieldMapperEntryFactory
                 $type = self::FALLBACK_FORM_TYPE;
         }
 
-        $name = $fieldDefinition->getName();
+        if (null !== $helpText = $fieldDefinition->getHelpText()) {
+            $options['help'] = $helpText;
+        }
 
         return new MapperEntry(
             \sprintf('%s_%s', HostConfigExtension::NAME, $name),
             $type,
-            [
-                'label' => $fieldDefinition->getDescription(),
-                'propertyPath' => self::buildExtensionPropertyPath($name),
-            ]
+            $options
         );
     }
 
     public function createShowMapperEntry(FieldDefinition $fieldDefinition): MapperEntry
     {
+        $group = $fieldDefinition->getGroup();
+        $options = [
+            'label' => _p('host-config-description', $fieldDefinition->getDescription()),
+            'fieldset' => null === $group ? _('Host configuration') : _p('host-config-group', $group),
+        ];
+
         switch ($fieldType = $fieldDefinition->getType()) {
             case FieldDefinition::TYPE_TEXT:
                 $type = null;
+                break;
+            case FieldDefinition::TYPE_PASSWORD:
+                $type = PasswordType::class;
+                $options['template'] = '@StsblHostConfig/crud/show/field_password.html.twig';
                 break;
             default:
                 $this->logger->warning('Unknown field type "{type}". Using "{fallback_type}".', [
@@ -96,9 +113,7 @@ final class FieldMapperEntryFactory
         return new MapperEntry(
             self::buildExtensionPropertyPath($fieldDefinition->getName()),
             $type,
-            [
-                'label' => $fieldDefinition->getDescription(),
-            ]
+            $options
         );
     }
 

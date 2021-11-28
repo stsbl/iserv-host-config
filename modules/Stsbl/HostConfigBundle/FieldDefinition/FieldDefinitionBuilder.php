@@ -36,7 +36,6 @@ final class FieldDefinitionBuilder
 {
     /**
      * @param array<string,string> $config
-     * @return FieldDefinition
      */
     public function build(string $name, array $config): FieldDefinition
     {
@@ -44,6 +43,12 @@ final class FieldDefinitionBuilder
             throw new \InvalidArgumentException('Missing configuration keys.');
         }
 
-        return new FieldDefinition($name, $config['type'], $config['description']);
+        return new FieldDefinition(
+            $name,
+            $config['type'],
+            $config['description'],
+            $config['help_text'] ?? null,
+            $config['group'] ?? null
+        );
     }
 }

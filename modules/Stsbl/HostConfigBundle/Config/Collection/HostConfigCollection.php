@@ -38,23 +38,38 @@ use Stsbl\HostConfigBundle\Entity\Config\HostConfig;
 final class HostConfigCollection
 {
     /**
-     * @var array<string,HostConfig[]> Host identifier as key
+     * @param array<string,array<string,HostConfig>> $hostConfigs Host identifier as key
      */
-    private $hostConfigs;
-
-    /**
-     * @param array<string,HostConfig[]> $hostConfigs Host identifier as key
-     */
-    public function __construct(array $hostConfigs)
+    public function __construct(private array $hostConfigs)
     {
-        $this->hostConfigs = $hostConfigs;
     }
 
     /**
      * @return HostConfig[]
      */
-    public function forHost(HostInterface $host): array
+    public function allConfigurationForHost(HostInterface $host): array
     {
-        return $this->hostConfigs[$host->getIdentifier()] ?? [];
+        return array_values($this->hostConfigs[$host->getIdentifier()] ?? []);
+    }
+
+    public function configurationForHost(HostInterface $host, string $key): ?HostConfig
+    {
+        return $this->hostConfigs[$host->getIdentifier()][$key] ?? null;
+    }
+
+    /**
+     * @return HostConfig[]
+     */
+    public function all(): array
+    {
+        $configs = [];
+
+        foreach ($this->hostConfigs as $configPerHost) {
+            foreach ($configPerHost as $config) {
+                $configs[] = $config;
+            }
+        }
+
+        return $configs;
     }
 }

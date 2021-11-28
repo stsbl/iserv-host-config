@@ -39,10 +39,9 @@ use Stsbl\HostConfigBundle\Entity\Config\HostConfig;
  */
 interface HostConfigRepositoryInterface
 {
-    /**
-     * @return HostConfig[]
-     */
-    public function findAllForHost(Host $host): array;
+    public function findAllForHost(Host $host): HostConfigCollection;
 
     public function findAllForAllHosts(HostCollection $hosts): HostConfigCollection;
+
+    public function save(HostConfig $hostConfig): void;
 }

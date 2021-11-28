@@ -38,22 +38,19 @@ use Symfony\Component\Yaml\Yaml;
  */
 final class FieldConfigurationLoader
 {
-    /**
-     * @var string[]
-     */
-    private $directories;
 
     /**
      * @var Finder
      */
-    private $finder;
+    private Finder $finder;
 
     /**
      * @param string[] $directories
      */
-    public function __construct(array $directories, ?Finder $finder = null)
-    {
-        $this->directories = $directories;
+    public function __construct(
+        private array $directories,
+        ?Finder $finder = null,
+    ) {
         $this->finder = $finder ?? new Finder();
     }
 
@@ -63,26 +60,25 @@ final class FieldConfigurationLoader
      */
     public function load(): array
     {
-        /** @var iterable<string> $yamlFiles */
         $yamlFiles = $this->finder
             ->in($this->directories)
             ->name('*.yaml')
-            ->depth(1)
+            ->depth(0)
             ->getIterator()
         ;
         $parsed = [];
 
         foreach ($yamlFiles as $yamlFile) {
-            $content = @\file_get_contents($yamlFile);
-
-            if (false === $content) {
-                throw LoadException::couldNotRead($yamlFile, \error_get_last()['message'] ?? 'Unknown error');
+            try {
+                $content = $yamlFile->getContents();
+            } catch (\RuntimeException $e) {
+                throw LoadException::couldNotRead($yamlFile->getPath(), $e->getMessage());
             }
 
             try {
                 $parsed[] = Yaml::parse($content);
             } catch (ParseException $e) {
-                throw LoadException::couldNotParse($yamlFile, $e);
+                throw LoadException::couldNotParse($yamlFile->getPath(), $e);
             }
         }
 

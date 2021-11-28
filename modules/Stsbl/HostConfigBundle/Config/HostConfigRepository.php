@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Stsbl\HostConfigBundle\Config;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use IServ\HostBundle\Entity\Host;
 use IServ\HostBundle\Model\Host as HostModel;
@@ -51,11 +52,19 @@ final class HostConfigRepository extends ServiceEntityRepository implements Host
     /**
      * {@inheritDoc}
      */
-    public function findAllForHost(Host $host): array
+    public function findAllForHost(Host $host): HostConfigCollection
     {
-        return $this->findBy([
+        $configs = $this->findBy([
             'host' => $host,
         ]);
+
+        $builder = new HostConfigCollectionBuilder();
+
+        foreach ($configs as $config) {
+            $builder->add($config);
+        }
+
+        return $builder->build();
     }
 
     /**
@@ -79,10 +88,23 @@ final class HostConfigRepository extends ServiceEntityRepository implements Host
             $hosts->getHosts()
         ));
 
-        foreach ($qb->getQuery()->iterate() as $hostConfig) {
+        foreach ($qb->getQuery()->toIterable() as $hostConfig) {
             $builder->add($hostConfig);
         }
 
         return $builder->build();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function save(HostConfig $hostConfig): void
+    {
+        try {
+            $this->getEntityManager()->persist($hostConfig);
+            $this->getEntityManager()->flush();
+        } catch (ORMException $e) {
+            throw new \RuntimeException('Could not save host config.', 0, $e);
+        }
     }
 }

@@ -35,25 +35,13 @@ namespace Stsbl\HostConfigBundle\Config\Mapper;
 final class MapperEntry
 {
     /**
-     * @var string
+     * @param mixed[] $options
      */
-    private $name;
-
-    /**
-     * @var string|null
-     */
-    private $type;
-
-    /**
-     * @var array
-     */
-    private $options;
-
-    public function __construct(string $name, ?string $type, array $options)
-    {
-        $this->name = $name;
-        $this->type = $type;
-        $this->options = $options;
+    public function __construct(
+        private string $name,
+        private ?string $type,
+        private array $options,
+    ) {
     }
 
     public function getName(): string

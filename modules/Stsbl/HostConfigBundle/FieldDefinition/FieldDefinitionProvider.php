@@ -34,27 +34,18 @@ use Stsbl\HostConfigBundle\FieldDefinition\Collection\FieldDefinitionCollection;
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
-class FieldDefinitionProvider
+final class FieldDefinitionProvider
 {
-    /**
-     * @var FieldConfigurationLoader
-     */
-    private $loader;
-
-    /**
-     * @var FieldConfigurationParser
-     */
-    private $parser;
 
     /**
      * @var FieldDefinitionCollection|null
      */
-    private $fieldDefinitions;
+    private ?FieldDefinitionCollection $fieldDefinitions = null;
 
-    public function __construct(FieldConfigurationLoader $loader, FieldConfigurationParser $parser)
-    {
-        $this->loader = $loader;
-        $this->parser = $parser;
+    public function __construct(
+        private FieldConfigurationLoader $loader,
+        private FieldConfigurationParser $parser,
+    ) {
     }
 
     public function provide(): FieldDefinitionCollection

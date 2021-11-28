@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Stsbl\HostConfigBundle\Entity\Config;
 
 use Doctrine\ORM\Mapping as ORM;
+use FontLib\Table\Type\name;
 use IServ\HostBundle\Entity\Host;
+use phpDocumentor\Reflection\Types\False_;
+use Stsbl\HostConfigBundle\Config\HostConfigRepository;
 
 /*
  * The MIT License
@@ -32,50 +35,27 @@ use IServ\HostBundle\Entity\Host;
  */
 
 /**
- * @ORM\Entity(repositoryClass="Stsbl\HostConfigBundle\Config\HostConfigRepository")
- * @ORM\Table(name="host_config")
- *
  * @author Felix Jacobi <felix.jacobi@stsbl.de>
  * @license MIT license <https://opensource.org/licenses/MIT>
  */
+#[ORM\Entity(repositoryClass: HostConfigRepository::class)]
+#[ORM\Table(name: "host_config")]
 class HostConfig
 {
-    /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Id()
-     *
-     * @var int|null
-     */
-    private $id;
+    #[ORM\Column(name: "id", type: "integer", nullable: false)]
+    #[ORM\GeneratedValue(strategy: "AUTO")]
+    #[ORM\Id]
+    private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="IServ\HostBundle\Entity\Host", fetch="EAGER")
-     * @ORM\JoinColumn(name="host_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-     *
-     * @var Host
-     */
-    private $host;
-
-    /**
-     * @ORM\Column(name="key", type="text", nullable=false)
-     *
-     * @var string
-     */
-    private $key;
-
-    /**
-     * @ORM\Column(name="value", type="text", nullable=true)
-     *
-     * @var string|null
-     */
-    private $value;
-
-    public function __construct(Host $host, string $key, ?string $value)
-    {
-        $this->host = $host;
-        $this->key = $key;
-        $this->value = $value;
+    public function __construct(
+        #[ORM\JoinColumn(name: "host_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+        #[ORM\ManyToOne(targetEntity: Host::class, fetch: "EAGER")]
+        private Host $host,
+        #[ORM\Column(name: "key", type: "text", nullable: false)]
+        private string $key,
+        #[ORM\Column(name: "value", type: "text", nullable: true)]
+        private ?string $value
+    ) {
     }
 
     public function getId(): ?int

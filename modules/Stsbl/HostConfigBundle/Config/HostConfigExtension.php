@@ -48,29 +48,11 @@ final class HostConfigExtension extends AbstractHostExtension implements HostAdm
 {
     public const NAME = 'host-config';
 
-    /**
-     * @var FieldDefinitionProvider
-     */
-    private $definitionProvider;
-
-    /**
-     * @var HostConfigRepositoryInterface
-     */
-    private $configRepository;
-
-    /**
-     * @var FieldMapperEntryFactory
-     */
-    private $fieldMapperEntryFactory;
-
     public function __construct(
-        FieldDefinitionProvider $definitionProvider,
-        HostConfigRepositoryInterface $configRepository,
-        FieldMapperEntryFactory $fieldMapperEntryFactory
+        private FieldDefinitionProvider $definitionProvider,
+        private HostConfigRepositoryInterface $configRepository,
+        private FieldMapperEntryFactory $fieldMapperEntryFactory
     ) {
-        $this->definitionProvider = $definitionProvider;
-        $this->configRepository = $configRepository;
-        $this->fieldMapperEntryFactory = $fieldMapperEntryFactory;
     }
 
     /**
@@ -86,7 +68,9 @@ final class HostConfigExtension extends AbstractHostExtension implements HostAdm
      */
     public function configureFormFields(FormMapper $formMapper): void
     {
-        foreach ($this->definitionProvider->provide()->all() as $fieldDefinition) {
+        $fieldDefinitions = $this->definitionProvider->provide()->all();
+
+        foreach ($fieldDefinitions as $fieldDefinition) {
             $field = $this->fieldMapperEntryFactory->createFormMapperEntry($fieldDefinition);
             $formMapper->add($field->getName(), $field->getType(), $field->getOptions());
         }
@@ -110,7 +94,7 @@ final class HostConfigExtension extends AbstractHostExtension implements HostAdm
     {
         $hostConfigs = $this->configRepository->findAllForHost($host->getEntity());
 
-        self::incorporateHostConfig($hostConfigs, $host);
+        self::incorporateHostConfig($hostConfigs->all(), $host);
     }
 
     /**
@@ -121,7 +105,38 @@ final class HostConfigExtension extends AbstractHostExtension implements HostAdm
         $hostConfigs = $this->configRepository->findAllForAllHosts($hosts);
 
         foreach ($hosts->getHosts() as $host) {
-            self::incorporateHostConfig($hostConfigs->forHost($host), $host);
+            self::incorporateHostConfig($hostConfigs->allConfigurationForHost($host), $host);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function create(Host $host): void
+    {
+        $this->updateHostConfiguration($host);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function update(Host $host, array $previousData = null): void
+    {
+        $this->updateHostConfiguration($host);
+    }
+
+    private function updateHostConfiguration(Host $host): void
+    {
+        $hostConfigs = $this->configRepository->findAllForHost($host->getEntity());
+
+        foreach ($this->definitionProvider->provide()->all() as $fieldDefinition) {
+            $value = $host->getExtensionValue(self::NAME, $fieldDefinition->getName());
+            $hostConfig = $hostConfigs->configurationForHost(
+                $host,
+                $fieldDefinition->getName()
+            ) ?? new HostConfig($host->getEntity(), $fieldDefinition->getName(), $value);
+            $hostConfig->setValue($value);
+            $this->configRepository->save($hostConfig);
         }
     }
 
