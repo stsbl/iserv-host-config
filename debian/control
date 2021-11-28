@@ -13,7 +13,9 @@ Package: stsbl-iserv-host-config
 Architecture: all
 Depends: ${misc:Depends},
   ${perl:Depends},
-  iserv-portal,
+  iserv3-core,
+  iserv3-crud,
+  iserv3-host,
 Description: Geräte-Konfiguration für IServ (EXPERIMENTELL)
  Erlaubt das Erstellen von beliebigen Konfigurationsvariablen, die mit Geräten
  in der Geräteverwaltung verküpft werden.
