@@ -76,7 +76,7 @@ final class FieldMapperEntryFactory
         }
 
         if (null !== $helpText = $fieldDefinition->getHelpText()) {
-            $options['help'] = $helpText;
+            $options['help'] = _p('host-config-help-text', $helpText);
         }
 
         return new MapperEntry(
