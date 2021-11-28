@@ -8,7 +8,7 @@ use IServ\CoreBundle\Logger\ModuleLogger;
 use Psr\Log\LoggerInterface;
 use Stsbl\HostConfigBundle\Config\HostConfigExtension;
 use Stsbl\HostConfigBundle\FieldDefinition\FieldDefinition;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Stsbl\HostConfigBundle\Form\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /*
