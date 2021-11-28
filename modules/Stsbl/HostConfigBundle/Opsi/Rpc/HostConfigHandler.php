@@ -21,7 +21,7 @@ final class HostConfigHandler extends AbstractHandler
     ) {
     }
 
-    public function host_config_get_value(string $key): ?string
+    public function host_config_getValue(string $key): ?string
     {
         $deployHost = $this->clientToken->getHost();
 
