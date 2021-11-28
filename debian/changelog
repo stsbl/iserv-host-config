@@ -1,5 +1,5 @@
-stsbl-iserv-host-config (21.05.24-1) UNRELEASED; urgency=medium
+stsbl-iserv-host-config (21.11.28.1) stable; urgency=medium
 
-  * Initial Release.
+  * Initial release
 
- -- Stadtteilschule Blankenese <repository@stsbl.de>  Mon, 24 May 2021 01:20:01 +0200
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Sun, 28 Nov 2021 23:18:07 +0100
