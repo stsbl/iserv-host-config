@@ -9,3 +9,5 @@ CREATE TABLE host_config (
 );
 
 GRANT SELECT, UPDATE, INSERT, DELETE ON "host_config" TO "symfony";
+GRANT SELECT, USAGE ON "host_config_id_seq" TO "symfony";
+
