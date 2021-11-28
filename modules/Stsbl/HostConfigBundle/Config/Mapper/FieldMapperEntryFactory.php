@@ -66,6 +66,7 @@ final class FieldMapperEntryFactory
                 break;
             case FieldDefinition::TYPE_PASSWORD:
                 $type = PasswordType::class;
+                $options['always_empty'] = false; // Dump password as value attribute in HTML
                 break;
             default:
                 $this->logger->warning('Unknown field type "{type}". Using Symfony form type "{fallback_type}".', [
