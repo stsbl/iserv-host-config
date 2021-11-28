@@ -13,6 +13,7 @@ Package: stsbl-iserv-host-config
 Architecture: all
 Depends: ${misc:Depends},
   ${perl:Depends},
+  iserv-deploy,
   iserv3-core,
   iserv3-crud,
   iserv3-host,
