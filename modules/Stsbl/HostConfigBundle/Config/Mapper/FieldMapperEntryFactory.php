@@ -58,6 +58,7 @@ final class FieldMapperEntryFactory
             'label' => _p('host-config-description', $fieldDefinition->getDescription()),
             'property_path' => self::buildExtensionPropertyPath($name),
             'required' => false,
+            'multi_edit' => true,
         ];
 
         switch ($fieldType = $fieldDefinition->getType()) {
