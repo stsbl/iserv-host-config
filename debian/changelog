@@ -1,3 +1,9 @@
+stsbl-iserv-host-config (22.11.04.1) testing; urgency=medium
+
+  * Allowed multi edit for fields
+
+ -- Felix Jacobi <Felix@jacobi-hamburg.net>  Fri, 04 Nov 2022 06:45:27 +0100
+
 stsbl-iserv-host-config (21.12.05.2) stable; urgency=medium
 
   * Added missing maintenance dependency
