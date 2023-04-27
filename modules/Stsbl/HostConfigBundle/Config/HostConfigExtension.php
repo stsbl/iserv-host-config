@@ -130,7 +130,7 @@ final class HostConfigExtension extends AbstractHostExtension implements HostAdm
         $hostConfigs = $this->configRepository->findAllForHost($host->getEntity());
 
         foreach ($this->definitionProvider->provide()->all() as $fieldDefinition) {
-            if ($host->hasExtensionValue(self::NAME, $fieldDefinition->getName())) {
+            if ($host->isEntityExtended() && $host->hasExtensionValue(self::NAME, $fieldDefinition->getName())) {
                 $value = $host->getExtensionValue(self::NAME, $fieldDefinition->getName());
                 $hostConfig = $hostConfigs->configurationForHost(
                     $host,
