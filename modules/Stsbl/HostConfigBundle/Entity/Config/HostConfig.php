@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Stsbl\HostConfigBundle\Entity\Config;
 
 use Doctrine\ORM\Mapping as ORM;
-use FontLib\Table\Type\name;
 use IServ\HostBundle\Entity\Host;
-use phpDocumentor\Reflection\Types\False_;
 use Stsbl\HostConfigBundle\Config\HostConfigRepository;
 
 /*

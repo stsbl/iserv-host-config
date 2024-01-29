@@ -36,7 +36,6 @@ use Stsbl\HostConfigBundle\FieldDefinition\Collection\FieldDefinitionCollection;
  */
 final class FieldDefinitionProvider
 {
-
     /**
      * @var FieldDefinitionCollection|null
      */

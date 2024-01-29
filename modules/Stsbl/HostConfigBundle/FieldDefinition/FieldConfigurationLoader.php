@@ -38,7 +38,6 @@ use Symfony\Component\Yaml\Yaml;
  */
 final class FieldConfigurationLoader
 {
-
     /**
      * @var Finder
      */

@@ -12,9 +12,7 @@ use IServ\HostExtensionBundle\Crud\AbstractHostExtension;
 use IServ\HostExtensionBundle\Crud\HostAdminExtensionInterface;
 use Stsbl\HostConfigBundle\Config\Mapper\FieldMapperEntryFactory;
 use Stsbl\HostConfigBundle\Entity\Config\HostConfig;
-use Stsbl\HostConfigBundle\FieldDefinition\FieldDefinition;
 use Stsbl\HostConfigBundle\FieldDefinition\FieldDefinitionProvider;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /*
  * The MIT License
